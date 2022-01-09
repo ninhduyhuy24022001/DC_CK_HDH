@@ -26,8 +26,8 @@ def check_time_use():
     list_time = get_list_time("time.txt")
     for i in list_time:
         if today >= i['F'] and today < i['T']:
-            return True
-    return False
+            return i
+    return None
 
 def time_can_use(file_path):
     with open(file_path) as f:
@@ -35,11 +35,22 @@ def time_can_use(file_path):
         for line in f.readlines():
             time_use += line
     return time_use
+
+def time_delta_can_use():
+    t = check_time_use()
+    today  = datetime.datetime.now()
+    if check_time_use != None:
+        return (t['T'] - today)
+    return  None
     
-def clock(seconds):
-    time.sleep(seconds)
-    return 0
+def time_now():
+    now = datetime.datetime.now()
+    return now.strftime("%Y_%m_%d-%H_%M")
+
+def to_day():
+    now = datetime.datetime.now()
+    return now.strftime("%Y_%m_%d")
 
 if __name__ == "__main__":
-    t = time_can_use("time.txt")
+    t = to_day()
     print(t)
