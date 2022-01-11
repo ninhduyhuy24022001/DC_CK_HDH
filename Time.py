@@ -42,6 +42,18 @@ def time_delta_can_use():
     if check_time_use != None:
         return (t['T'] - today)
     return  None
+
+def next_time():
+    t = check_time_use()
+    list_time = get_list_time("time.txt")
+    minn = datetime.timedelta(seconds=100000)
+    h = None
+    for i in list_time:
+        # print(i["F"] - t["T"])
+        if i["F"] - t["T"] < minn and i["F"] - t["T"] > datetime.timedelta(seconds=0):
+            minn = (i["F"] - t["T"])
+            h = i
+    return h
     
 def time_now():
     now = datetime.datetime.now()
@@ -52,5 +64,5 @@ def to_day():
     return now.strftime("%Y_%m_%d")
 
 if __name__ == "__main__":
-    t = to_day()
+    t = time_delta_can_use() <= datetime.timedelta(seconds=60)
     print(t)

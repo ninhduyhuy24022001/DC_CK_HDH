@@ -6,7 +6,7 @@ import os
     
 keys = []
 
-def write_to_file(seconds):
+def write_to_file(seconds, keys):
     sta_time = datetime.now()
     end_time = datetime.now() + timedelta(seconds=seconds)
 

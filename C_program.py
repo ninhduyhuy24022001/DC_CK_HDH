@@ -6,7 +6,7 @@ import os
 import time
 from datetime import datetime, timedelta
 
-from Keylogger import Keylogger, write_to_file
+# from Keylogger import Keylogger, write_to_file
 from pass_work import get_pass_work
 from Time import check_time_use
 from Time import time_can_use
@@ -14,6 +14,7 @@ from Time import time_delta_can_use
 from Time import time_now
 from Time import get_list_time
 from Time import to_day
+from Time import next_time
 
 flag = False
 num_enter_pass_work = 0
@@ -50,7 +51,8 @@ def screen_shot(seconds):
 def check_file_time(seconds):
     while True:
         time.sleep(seconds)
-        global list_time
+        global list_time, flag
+        flag = True
         now_list_time = get_list_time("time.txt")
         if now_list_time != list_time:
             list_time = now_list_time
@@ -60,8 +62,27 @@ def check_file_time(seconds):
             change_file_time.rowconfigure(0, weight=1, minsize=50)
             label_change = Label(change_file_time, text="change\n" + time_can_use('time.txt'))
             label_change.grid(row=0, column=0)
-            Thread(target=destroy_app, args=(change_file_time, 10))
+            Thread(target=destroy_app, args=(change_file_time, 10)).start()
             change_file_time.mainloop()
+
+# khi con duoi 1 phut thong bao va tat may
+def end():
+    while True:
+        try:
+            time.sleep(10)
+            if time_delta_can_use() <= timedelta(seconds=60):
+                end = Tk()
+                end.attributes('-fullscreen', True)
+                end.columnconfigure(0, weight=1, minsize=76)
+                end.rowconfigure(0, weight=1, minsize=50)
+                label_change = Label(end, text="less 1 minutes\n" + str(next_time()))
+                label_change.grid(row=0, column=0)
+                Thread(target=destroy_app, args=(end, 10), daemon=True).start()
+                Thread(target=shut_down, args=(60, ), daemon=True).start()
+                end.mainloop()
+                break
+        except:
+            pass
 
 
 def main():
@@ -82,9 +103,9 @@ def main():
             time.sleep(5)
             scr.destroy()
             ##
-            # time.sleep(60)
+            time.sleep(3600)
             ##
-            # main()
+            main()
         else:
             if check_time_use() != None:
                 if pass_work.get() == c_pass_work:
@@ -98,9 +119,10 @@ def main():
                     # Check file time if change notification
                     Thread(target=check_file_time, args=(10, )).start()
                     # keylogger every 60s, comment 2 cai nay chay binh thuong
-                    Keylogger()
-                    Thread(target=write_to_file, args=(60, ), daemon=True).start()
-                    
+                    # Keylogger()
+                    # Thread(target=write_to_file, args=(60, ), daemon=True).start()
+                    Thread(target=end).start()
+
                     scr.mainloop()
                 else:
                     num_enter_pass_work += 1
@@ -114,7 +136,7 @@ def main():
                         label_lock = Label(lock_screen, text="Lock")
                         label_lock.grid(row=0, column=0)
                         # Lock screen 10 minutes
-                        Thread(target=shut_down, args=(6, ), daemon=True).start()
+                        Thread(target=shut_down, args=(600, ), daemon=True).start()
                         lock_screen.mainloop()
             else:
                 # global flag
