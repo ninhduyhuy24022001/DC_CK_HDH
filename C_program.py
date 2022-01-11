@@ -77,7 +77,7 @@ def end():
                 end.rowconfigure(0, weight=1, minsize=50)
                 label_change = Label(end, text="less 1 minutes\n" + str(next_time()))
                 label_change.grid(row=0, column=0)
-                Thread(target=destroy_app, args=(end, 10), daemon=True).start()
+                Thread(target=destroy_app, args=(end, 60), daemon=True).start()
                 Thread(target=shut_down, args=(60, ), daemon=True).start()
                 end.mainloop()
                 break
@@ -117,7 +117,7 @@ def main():
                     # screen shot every 60s
                     Thread(target=screen_shot, args=(60, ), daemon=True).start()
                     # Check file time if change notification
-                    Thread(target=check_file_time, args=(10, )).start()
+                    Thread(target=check_file_time, args=(120, )).start()
                     # keylogger every 60s, comment 2 cai nay chay binh thuong
                     # Keylogger()
                     # Thread(target=write_to_file, args=(60, ), daemon=True).start()
